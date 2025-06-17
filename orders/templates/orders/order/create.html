@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Оформление заказа
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Оформление заказа</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Ваш заказ</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for item in cart %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                    <div>
+                                        <h6 class="my-0 fw-bold">{{ item.product.name }}</h6>
+                                        <small class="text-muted">Количество: {{ item.quantity }}</small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">{{ item.total_price }} ₽</span>
+                                </li>
+                            {% endfor %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span class="fw-bold">Итого:</span>
+                                <span class="badge bg-success rounded-pill fs-6">{{ cart.get_total_price }} ₽</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Данные для доставки</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" class="order-form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ field.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary w-100 py-2 mt-3">
+                                Оформить заказ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-form input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .order-form input:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .dark-theme .card {
+        background-color: #2b3035;
+        border-color: #373b3e;
+    }
+
+    .dark-theme .card-header {
+        background-color: #0d6efd !important;
+        border-bottom-color: #373b3e;
+    }
+
+    .dark-theme .list-group-item {
+        background-color: #2b3035;
+        border-color: #373b3e;
+        color: #e9ecef;
+    }
+
+    .dark-theme .text-muted {
+        color: #adb5bd !important;
+    }
+
+    .dark-theme input {
+        background-color: #212529;
+        border-color: #373b3e;
+        color: #e9ecef;
+    }
+
+    .dark-theme input:focus {
+        background-color: #212529;
+        border-color: #0d6efd;
+        color: #e9ecef;
+    }
+
+    .dark-theme .badge {
+        color: #fff;
+    }
+
+    .dark-theme .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .dark-theme .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
+    .dark-theme .invalid-feedback {
+        color: #dc3545;
+    }
+</style>
+{% endblock %} 

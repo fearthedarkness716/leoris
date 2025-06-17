@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Заказ #{{ order.id }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Информация о заказе:</h5>
+                        <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+                        <p><strong>Статус оплаты:</strong> 
+                            {% if order.paid %}
+                                <span class="badge bg-success">Оплачен</span>
+                            {% else %}
+                                <span class="badge bg-warning">Ожидает оплаты</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Товары в заказе:</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Товар</th>
+                                        <th>Цена</th>
+                                        <th>Количество</th>
+                                        <th>Сумма</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.price }} ₽</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.get_cost }} ₽</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                                        <td><strong>{{ order.get_total_cost }} ₽</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    {% if not order.paid %}
+                        <div class="text-center">
+                            <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-primary">Оплатить заказ</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dark-theme .card {
+        background-color: #2b2b2b;
+        border-color: #444;
+    }
+    .dark-theme .card-header {
+        background-color: #1a1a1a !important;
+    }
+    .dark-theme .table {
+        color: #fff;
+    }
+    .dark-theme .table thead th {
+        border-bottom-color: #444;
+    }
+    .dark-theme .table tbody td {
+        border-top-color: #444;
+    }
+</style>
+{% endblock %} 

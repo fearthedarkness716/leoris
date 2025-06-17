@@ -1,0 +1,116 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %} | レオニス Anime Shop
+{% endblock %}
+
+{% block content %}
+    <!-- Categories Slider -->
+    <div class="categories-slider-container mb-4">
+        <div class="categories-slider">
+            <div class="category-item {% if not category %}active{% endif %}">
+                <a href="{% url 'shop:product_list' %}" class="category-link">
+                    <div class="category-card">
+                        <i class="fas fa-store"></i>
+                        <span>All</span>
+                    </div>
+                </a>
+            </div>
+            {% for c in categories %}
+                <div class="category-item {% if category.slug == c.slug %}active{% endif %}">
+                    <a href="{{ c.get_absolute_url }}" class="category-link">
+                        <div class="category-card">
+                            {% if c.name == 'Demon Slayer' %}
+                                <i class="fas fa-fire"></i>
+                            {% elif c.name == 'Death Note' %}
+                                <i class="fas fa-book-dead"></i>
+                            {% elif c.name == 'JoJo\'s Bizarre Adventure' %}
+                                <i class="fas fa-star"></i>
+                            {% elif c.name == 'Hunter x Hunter' %}
+                                <i class="fas fa-compass"></i>
+                            {% elif c.name == 'Overlord' %}
+                                <i class="fas fa-crown"></i>
+                            {% else %}
+                                <i class="fas fa-tag"></i>
+                            {% endif %}
+                            <span>{{ c.name }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="slider-nav prev" onclick="slideCategories(-1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slider-nav next" onclick="slideCategories(1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for product in products %}
+            <div class="col">
+                <div class="card product-card h-100">
+                    <a href="{{ product.get_absolute_url }}" class="product-image-link">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/no_image.png' %}" class="card-img-top" alt="No image available">
+                        {% endif %}
+                    </a>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="price-text mt-auto">${{ product.price }}</p>
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No products found in this category.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        let scrollPosition = 0;
+        const slider = document.querySelector('.categories-slider');
+        
+        function slideCategories(direction) {
+            const sliderWidth = slider.offsetWidth;
+            const scrollAmount = sliderWidth / 2;
+            
+            scrollPosition += direction * scrollAmount;
+            
+            // Check bounds
+            const maxScroll = slider.scrollWidth - slider.offsetWidth;
+            scrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
+            
+            slider.scroll({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            
+            // Update button visibility
+            updateNavButtons();
+        }
+        
+        function updateNavButtons() {
+            const prevBtn = document.querySelector('.slider-nav.prev');
+            const nextBtn = document.querySelector('.slider-nav.next');
+            
+            prevBtn.style.display = scrollPosition <= 0 ? 'none' : 'flex';
+            nextBtn.style.display = scrollPosition >= slider.scrollWidth - slider.offsetWidth ? 'none' : 'flex';
+        }
+        
+        // Initial button visibility
+        document.addEventListener('DOMContentLoaded', updateNavButtons);
+        
+        // Update on window resize
+        window.addEventListener('resize', updateNavButtons);
+    </script>
+{% endblock %} 

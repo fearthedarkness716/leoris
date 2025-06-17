@@ -1,0 +1,178 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Order Completed | レオニス Anime Shop{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="cart-container text-center">
+            <div class="order-success-icon mb-4">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="japanese-heading mb-4">Thank You!</h1>
+            <p class="lead mb-4">Your order has been successfully placed.</p>
+            <div class="order-details mb-4">
+                <p>Your order number is: <strong>#{{ order.id }}</strong></p>
+                <p>We have sent a confirmation email to <strong>{{ order.email }}</strong></p>
+            </div>
+            <div class="shipping-info mb-4">
+                <h3 class="mb-3">Shipping Information</h3>
+                <div class="shipping-details">
+                    <p><strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+                    <p>{{ order.address }}</p>
+                    <p>{{ order.city }}, {{ order.postal_code }}</p>
+                </div>
+            </div>
+            <div class="order-summary mb-4">
+                <h3 class="mb-3">Order Summary</h3>
+                <div class="order-items">
+                    {% for item in order.items.all %}
+                        <div class="order-item">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                                    <div class="ms-3 text-start">
+                                        <div class="order-item-name">{{ item.product.name }}</div>
+                                        <div class="order-item-details">
+                                            <span class="text-muted">Qty: {{ item.quantity }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order-item-price">${{ item.get_cost }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="order-total mt-3 pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Total:</span>
+                        <span class="total-amount">${{ order.get_total_cost }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'shop:product_list' %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .order-success-icon {
+        font-size: 4rem;
+        color: #2ecc71;
+        animation: successPop 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes successPop {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .shipping-details {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px var(--border-color);
+    }
+
+    .shipping-details p {
+        margin-bottom: 0.5rem;
+    }
+
+    .order-items {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .order-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color 0.3s ease;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .order-item:hover {
+        background-color: var(--hover-color);
+    }
+
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 8px;
+        background-color: var(--card-bg);
+        padding: 0.25rem;
+    }
+
+    .order-item-name {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 0.25rem;
+    }
+
+    .order-item-details {
+        font-size: 0.9rem;
+    }
+
+    .order-item-price {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .total-amount {
+        color: var(--primary-color);
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    [data-theme="dark"] .total-amount {
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .order-success-icon {
+            font-size: 3rem;
+        }
+
+        .order-item {
+            padding: 0.75rem;
+        }
+
+        .order-item-image {
+            width: 50px;
+            height: 50px;
+        }
+
+        .order-item-name {
+            font-size: 0.9rem;
+        }
+
+        .order-item-details {
+            font-size: 0.8rem;
+        }
+
+        .order-item-price {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Оплата заказа {{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Оплата заказа #{{ order.id }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Информация о заказе:</h5>
+                        <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+                        <p><strong>Сумма заказа:</strong> {{ order.get_total_cost }} ₽</p>
+                        <p><strong>Статус оплаты:</strong> 
+                            {% if order.paid %}
+                                <span class="badge bg-success">Оплачен</span>
+                            {% else %}
+                                <span class="badge bg-warning">Ожидает оплаты</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    {% if not order.paid %}
+                        <div class="alert alert-info">
+                            <h5>Способ оплаты:</h5>
+                            <p>Для оплаты заказа выберите удобный способ оплаты:</p>
+                            <form method="post" class="mt-3">
+                                {% csrf_token %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="card" value="card" checked>
+                                    <label class="form-check-label" for="card">
+                                        Банковская карта
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="qiwi" value="qiwi">
+                                    <label class="form-check-label" for="qiwi">
+                                        QIWI
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="yoomoney" value="yoomoney">
+                                    <label class="form-check-label" for="yoomoney">
+                                        ЮMoney
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Оплатить заказ</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            <h5>Заказ успешно оплачен!</h5>
+                            <p>Спасибо за покупку. Мы отправим вам уведомление о статусе заказа.</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-4">
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-secondary">Вернуться к заказу</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dark-theme .card {
+        background-color: #2b2b2b;
+        border-color: #444;
+    }
+    .dark-theme .card-header {
+        background-color: #1a1a1a !important;
+    }
+    .dark-theme .alert-info {
+        background-color: #2c2c2c;
+        border-color: #444;
+        color: #fff;
+    }
+    .dark-theme .form-check-label {
+        color: #fff;
+    }
+</style>
+{% endblock %} 

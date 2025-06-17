@@ -1,0 +1,258 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}My Profile | レオニス Anime Shop{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="profile-container">
+            <!-- User Info Section -->
+            <div class="user-info-section mb-5">
+                <div class="heading-container">
+                    <h1 class="japanese-heading">My Profile</h1>
+                </div>
+                <div class="user-details">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-text">
+                        <h2>{{ user.get_full_name|default:user.username }}</h2>
+                        <p class="text-muted">{{ user.email }}</p>
+                        <p class="member-since">Member since: {{ user.date_joined|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order History Section -->
+            <div class="orders-section">
+                <h2 class="section-title mb-4">Order History</h2>
+                {% if orders %}
+                    <div class="order-list">
+                        {% for order in orders %}
+                            <div class="order-card">
+                                <div class="order-header">
+                                    <div class="order-meta">
+                                        <h3>Order #{{ order.id }}</h3>
+                                        <span class="order-date">{{ order.created|date:"F j, Y" }}</span>
+                                    </div>
+                                    <div class="order-status {% if order.paid %}status-paid{% else %}status-pending{% endif %}">
+                                        {{ order.paid|yesno:"Paid,Pending" }}
+                                    </div>
+                                </div>
+                                <div class="order-items">
+                                    {% for item in order.items.all %}
+                                        <div class="order-item">
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+                                            <div class="order-item-details">
+                                                <h4>{{ item.product.name }}</h4>
+                                                <p class="text-muted">Quantity: {{ item.quantity }}</p>
+                                                <p class="item-price">${{ item.get_cost }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="order-footer">
+                                    <div class="order-total">
+                                        Total: <span>${{ order.get_total_cost }}</span>
+                                    </div>
+                                    <div class="shipping-address">
+                                        <small class="text-muted">
+                                            Shipped to: {{ order.address }}, {{ order.city }} {{ order.postal_code }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        <p>You haven't placed any orders yet.</p>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">
+                            Start Shopping
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        padding: 2rem;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 2px 8px var(--border-color);
+    }
+
+    .user-info-section {
+        text-align: center;
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .user-avatar {
+        font-size: 5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .user-text h2 {
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .member-since {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .section-title {
+        color: var(--text-color);
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .order-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: var(--hover-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .order-meta h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--text-color);
+    }
+
+    .order-date {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .order-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .status-paid {
+        background-color: #2ecc71;
+        color: white;
+    }
+
+    .status-pending {
+        background-color: #f1c40f;
+        color: #2c3e50;
+    }
+
+    .order-items {
+        padding: 1rem;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .order-item:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-right: 1rem;
+    }
+
+    .order-item-details h4 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--text-color);
+    }
+
+    .item-price {
+        color: var(--primary-color);
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .order-footer {
+        padding: 1rem;
+        background-color: var(--hover-color);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .order-total {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .order-total span {
+        color: var(--primary-color);
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+
+    .no-orders i {
+        font-size: 3rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 1rem;
+        }
+
+        .order-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .order-status {
+            margin-top: 0.5rem;
+        }
+
+        .order-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .order-item-image {
+            margin-right: 0;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+{% endblock %} 
