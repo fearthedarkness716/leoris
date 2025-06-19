@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "shop/base.html" %}
 {% load static %}
 
 {% block title %}
@@ -64,68 +64,59 @@
 
 {% block extra_css %}
 <style>
-    .order-form input {
+    .order-form input, .order-form input:focus, .order-form input:active {
         width: 100%;
         padding: 10px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--card-bg);
+        color: var(--text-color);
+        transition: border-color 0.15s, box-shadow 0.15s;
+        font-size: 1rem;
     }
-    
     .order-form input:focus {
-        border-color: #86b7fe;
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.15rem rgba(255,107,74,0.15);
+        outline: none;
     }
-
-    .dark-theme .card {
-        background-color: #2b3035;
-        border-color: #373b3e;
+    .order-form label {
+        color: var(--text-color);
+        font-weight: 500;
     }
-
-    .dark-theme .card-header {
-        background-color: #0d6efd !important;
-        border-bottom-color: #373b3e;
-    }
-
-    .dark-theme .list-group-item {
-        background-color: #2b3035;
-        border-color: #373b3e;
-        color: #e9ecef;
-    }
-
-    .dark-theme .text-muted {
-        color: #adb5bd !important;
-    }
-
-    .dark-theme input {
-        background-color: #212529;
-        border-color: #373b3e;
-        color: #e9ecef;
-    }
-
-    .dark-theme input:focus {
-        background-color: #212529;
-        border-color: #0d6efd;
-        color: #e9ecef;
-    }
-
-    .dark-theme .badge {
-        color: #fff;
-    }
-
-    .dark-theme .btn-primary {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-
-    .dark-theme .btn-primary:hover {
-        background-color: #0b5ed7;
-        border-color: #0a58ca;
-    }
-
-    .dark-theme .invalid-feedback {
+    .order-form .invalid-feedback {
         color: #dc3545;
+        font-size: 0.95em;
+    }
+    .card, .card-header, .card-body, .list-group-item {
+        background: var(--card-bg) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .card-header {
+        background: transparent !important;
+        color: var(--primary-color) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    .card-title {
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+    .badge.bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+    .badge.bg-success {
+        background-color: #2ecc71 !important;
+    }
+    .btn-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .btn-primary:hover {
+        background-color: #e65c3a !important;
+        border-color: #e65c3a !important;
+    }
+    .list-group-item {
+        border-radius: 0 !important;
     }
 </style>
 {% endblock %} 

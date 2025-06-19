@@ -54,13 +54,14 @@
                                 </tfoot>
                             </table>
                         </div>
-                    </div>
-
-                    {% if not order.paid %}
-                        <div class="text-center">
-                            <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-primary">Оплатить заказ</a>
+                        {% if not order.paid %}
+                        <div class="mt-3 text-end">
+                            <a href="{% url 'orders:order_pay' order.id %}" class="btn btn-success">
+                                Оплатить
+                            </a>
                         </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

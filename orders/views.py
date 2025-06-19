@@ -16,16 +16,22 @@ def order_create(request):
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
-            order = form.save()
-            for item in cart:
-                OrderItem.objects.create(
-                    order=order,
-                    product=item['product'],
-                    price=item['price'],
-                    quantity=item['quantity']
-                )
-            cart.clear()
-            return render(request, 'orders/order/created.html', {'order': order})
+            if len(cart) == 0:
+                form.add_error(None, 'Ваша корзина пуста. Добавьте товары для оформления заказа.')
+            else:
+                order = form.save(commit=False)
+                if request.user.is_authenticated:
+                    order.user = request.user
+                order.save()
+                for item in cart:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item['product'],
+                        price=item['price'],
+                        quantity=item['quantity']
+                    )
+                cart.clear()
+                return redirect('accounts:profile')
     else:
         form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'cart': cart, 'form': form})
@@ -41,8 +47,9 @@ def order_completed(request):
 
 
 def profile_view(request):
-    # Get all orders for the current user
+    # Get all orders for the current user, только с товарами
     orders = Order.objects.filter(user=request.user).order_by('-created')
+    orders = [order for order in orders if order.items.exists()]
     return render(request, 'orders/profile.html', {
         'user': request.user,
         'orders': orders

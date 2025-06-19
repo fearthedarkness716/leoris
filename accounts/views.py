@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .forms import UserRegisterForm, UserUpdateForm
 from orders.models import Order
+from django.db import models
 
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
@@ -22,7 +23,7 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def profile_view(request):
-    orders = Order.objects.all().order_by('-created')
+    orders = Order.objects.annotate(num_items=models.Count('items')).filter(num_items__gt=0).order_by('-created')
     return render(request, 'accounts/profile.html', {
         'orders': orders
     }) 

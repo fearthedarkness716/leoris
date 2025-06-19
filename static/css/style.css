@@ -1,0 +1,50 @@
+/* Пример: */
+:root[data-theme="light"] {
+    --primary-color: #FF6B4A;
+    --background-color: #FFF9F5;
+    --card-bg: #FFFFFF;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --border-color: rgba(0,0,0,0.1);
+    --hover-color: rgba(255,107,74,0.1);
+}
+:root[data-theme="dark"] {
+    --primary-color: #FF6B4A;
+    --background-color: #1A1A1D;
+    --card-bg: #2D2D32;
+    --text-color: #E2E8F0;
+    --text-muted: #A0AEC0;
+    --border-color: rgba(255,255,255,0.1);
+    --hover-color: rgba(255,107,74,0.2);
+}
+
+/* Заменяю .dark-theme на [data-theme="dark"] для всех селекторов */
+/* ... (можно сделать автозамену или вручную для ключевых блоков) ... */
+
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 2rem;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+    border-radius: 50%;
+}
+.theme-toggle-btn:hover, .theme-toggle-btn:focus {
+    color: #fff;
+    background: var(--primary-color);
+    box-shadow: 0 2px 8px var(--border-color);
+    outline: none;
+}
+[data-theme="dark"] .theme-toggle-btn {
+    color: var(--accent-color, #FFD700);
+    background: none;
+}
+[data-theme="dark"] .theme-toggle-btn:hover, [data-theme="dark"] .theme-toggle-btn:focus {
+    color: #222;
+    background: var(--accent-color, #FFD700);
+} 
