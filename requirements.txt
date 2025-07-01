@@ -6,3 +6,4 @@ typing-extensions>=4.13.2
 Pillow>=10.0.0 
 gunicorn
 django-widget-tweaks
+whitenoise
