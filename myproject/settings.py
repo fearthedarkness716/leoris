@@ -144,3 +144,8 @@ CART_SESSION_ID = 'cart'
 LOGIN_REDIRECT_URL = 'accounts:profile'
 LOGOUT_REDIRECT_URL = 'shop:product_list'
 LOGIN_URL = 'accounts:login'
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'leonis-anime-shop-7zi9.onrender.com',
+]
