@@ -1500,7 +1500,7 @@
                 document.documentElement.setAttribute('data-theme', theme);
                 localStorage.setItem('theme', theme);
                 themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-            }
+        }
             themeToggle.addEventListener('click', function() {
                 themeIcon.classList.add('icon-rotate');
                 setTimeout(() => themeIcon.classList.remove('icon-rotate'), 500);
